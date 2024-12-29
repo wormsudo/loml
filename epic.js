@@ -529,15 +529,32 @@ function typeText(text) {
 
 // Function to handle the special scene
 async function handleSpecialScene(scene) {
-    // Ensure bgMusic is actually stopped
+    // Stop background music immediately
     bgMusic.pause();
     bgMusic.currentTime = 0;
 
-    // Reset and play special music
+    // Clear any previous special music state
+    specialSceneMusic.pause();
     specialSceneMusic.currentTime = 0;
-    specialSceneMusic.volume = 0.1;
+    
+    // Set up special music
+    specialSceneMusic.volume = 0;
+    
+    // Try to play the special music
     try {
-        await specialSceneMusic.play();
+        const musicPromise = specialSceneMusic.play();
+        if (musicPromise !== undefined) {
+            musicPromise.then(() => {
+                // Fade in the volume
+                const fadeIn = setInterval(() => {
+                    if (specialSceneMusic.volume < 0.1) {
+                        specialSceneMusic.volume += 0.01;
+                    } else {
+                        clearInterval(fadeIn);
+                    }
+                }, 50);
+            }).catch(e => console.log('Special music autoplay prevented:', e));
+        }
     } catch (e) {
         console.log('Special music play failed:', e);
     }

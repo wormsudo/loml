@@ -225,19 +225,23 @@
         }
 
         .final-text {
-            position: fixed; /* Change to fixed like the images */
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            position: fixed;
+            font-size: min(2.5rem, 5vw); /* Ensures text isn't too large on any screen */
             color: white;
             text-align: center;
             opacity: 0;
-            transition: opacity 2s ease-in-out;
+            transition: all 2s ease-in-out; /* Added 'all' to ensure all properties transition */
             z-index: 10;
-            width: 80%; /* Reduced width for better centering */
+            width: min(800px, 90%); /* Maximum width of 800px or 90% of viewport */
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            padding: 1rem;
-            pointer-events: none; /* Ensures it doesn't interfere with other elements */
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background to ensure readability */
+            border-radius: 1rem;
+            pointer-events: none;
+            margin: 0;
+            line-height: 1.5;
         }
 
         .final-text.active {

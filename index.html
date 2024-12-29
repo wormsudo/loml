@@ -225,19 +225,20 @@
         }
 
         .final-text {
-        position: absolute;
-        font-size: clamp(1.5rem, 5vw, 2.5rem); /* Responsive font size */
-        color: white;
-        text-align: center;
-        opacity: 0;
-        transition: opacity 2s ease-in-out;
-        z-index: 10;
-        width: 90%;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        padding: 1rem;
-    }
+            position: fixed; /* Change to fixed like the images */
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: white;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 10;
+            width: 80%; /* Reduced width for better centering */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 1rem;
+            pointer-events: none; /* Ensures it doesn't interfere with other elements */
+        }
 
         .final-text.active {
             opacity: 1;

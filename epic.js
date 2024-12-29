@@ -529,33 +529,24 @@ function typeText(text) {
 
 // Function to handle the special scene
 async function handleSpecialScene(scene) {
-    // Fade out current music and switch to special music
-    const fadeOut = setInterval(() => {
-        if (bgMusic.volume > 0.1) {
-            bgMusic.volume -= 0.1;
-        } else {
-            clearInterval(fadeOut);
-            bgMusic.pause();
-            bgMusic.currentTime = 0;
-            // Start special music with fade in
-            specialSceneMusic.volume = 0;
-            specialSceneMusic.play();
-            const fadeIn = setInterval(() => {
-                if (specialSceneMusic.volume < 0.2) {
-                    specialSceneMusic.volume += 0.1;
-                } else {
-                    clearInterval(fadeIn);
-                }
-            }, 100);
-        }
-    }, 100);
+    // Ensure bgMusic is actually stopped
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+
+    // Reset and play special music
+    specialSceneMusic.currentTime = 0;
+    specialSceneMusic.volume = 0.1;
+    try {
+        await specialSceneMusic.play();
+    } catch (e) {
+        console.log('Special music play failed:', e);
+    }
 
     // Hide main game container with a smooth fade out
     const gameContainer = document.querySelector('.game-container');
     gameContainer.style.transition = 'opacity 2s';
     gameContainer.style.opacity = '0';
     
-    // Wait for fade out before hiding and showing special scene
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     gameContainer.style.display = 'none';
@@ -591,7 +582,7 @@ async function handleSpecialScene(scene) {
         });
     }
 
-    // After all images, show final text with longer display time
+    // After all images, show final text
     await new Promise(resolve => {
         setTimeout(() => {
             finalText.classList.add('active');
@@ -599,8 +590,12 @@ async function handleSpecialScene(scene) {
         }, 2000);
     });
 
-    // Wait longer on the final text before showing letter (increased to 6 seconds)
-    await new Promise(resolve => setTimeout(resolve, 6000));
+    // Keep text visible for 4 seconds then fade it out
+    await new Promise(resolve => setTimeout(resolve, 4000));
+    finalText.style.opacity = '0';
+
+    // Wait for text to fade out before showing letter
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Show final letter
     await new Promise(resolve => {
@@ -610,7 +605,7 @@ async function handleSpecialScene(scene) {
                 finalLetter.classList.add('active');
             }, 100);
             resolve();
-        }, 4000);
+        }, 1000);
     });
 }
 
